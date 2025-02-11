@@ -16,3 +16,9 @@ jobs:
     - uses: actions/checkout@v4
     - name: Build
       run: cargo build --release
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4
+      with:
+        name: code2prompt # Name of the artifact
+        path: target/release/code2prompt.exe
