@@ -148,6 +148,8 @@ pub fn get_git_log(repo_path: &Path, branch1: &str, branch2: &str) -> Result<Str
 ///
 /// * `bool` - `true` if the branch exists, `false` otherwise
 fn branch_exists(repo: &Repository, branch_name: &str) -> bool {
-    repo.find_branch(branch_name, git2::BranchType::Local)
-        .is_ok()
+    match repo.find_branch(branch_name, git2::BranchType::Local) {
+        Ok(_) => true,
+        Err(_) => false,
+    }
 }

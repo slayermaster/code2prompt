@@ -22,12 +22,7 @@ const CUSTOM_TEMPLATE_NAME: &str = "custom";
 
 // CLI Arguments
 #[derive(Parser)]
-#[clap(
-    name = env!("CARGO_PKG_NAME"), 
-    version = env!("CARGO_PKG_VERSION"), 
-    author = env!("CARGO_PKG_AUTHORS")
-)]
-#[command(arg_required_else_help = true)]
+#[clap(name = "code2prompt", version = "2.0.0", author = "Mufeed VH")]
 struct Cli {
     /// Path to the codebase directory
     #[arg()]
@@ -98,18 +93,6 @@ struct Cli {
     /// Print output as JSON
     #[clap(long)]
     json: bool,
-
-    /// Follow symlinks
-    #[clap(short = 'f', long)]
-    follow_symlinks: bool,
-
-    /// Include hidden directories and files
-    #[clap(long)]
-    hidden: bool,
-
-    /// Skip .gitignore rules
-    #[clap(long)]
-    no_ignore: bool,
 }
 
 fn main() -> Result<()> {
@@ -137,9 +120,6 @@ fn main() -> Result<()> {
         args.relative_paths,
         args.exclude_from_tree,
         args.no_codeblock,
-        args.follow_symlinks,
-        args.hidden,
-        args.no_ignore,
     );
 
     let (tree, files) = match create_tree {
@@ -242,7 +222,8 @@ fn main() -> Result<()> {
         });
         println!("{}", serde_json::to_string_pretty(&json_output)?);
         return Ok(());
-    } else if args.tokens {
+    } else {
+        if args.tokens {
             println!(
                 "{}{}{} Token count: {}, Model info: {}",
                 "[".bold().white(),
@@ -251,6 +232,7 @@ fn main() -> Result<()> {
                 token_count.to_string().bold().yellow(),
                 model_info
             );
+        }
     }
 
     // Copy to Clipboard
